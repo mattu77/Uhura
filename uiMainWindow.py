@@ -1,6 +1,10 @@
 import os
+
+from platformdirs import user_config_dir
+
 from path import path
 import webbrowser
+import platformdirs
 
 from PyQt6 import QtGui, QtCore
 from PyQt6.QtGui import QIcon, QAction
@@ -30,8 +34,8 @@ class MainWindow(QMainWindow):
         self.webview.loadFinished.connect(self.loadFinished)
 
         self.profile = QWebEngineProfile('MyProfile')
-        self.profile.setPersistentStoragePath(path('profile/storage'))
-        self.profile.setCachePath(path('profile/cache'))
+        self.profile.setPersistentStoragePath(user_config_dir() + '/uhura/storage')
+        self.profile.setCachePath(path(user_config_dir() + '/uhura/cache'))
         self.profile.setPersistentCookiesPolicy(QWebEngineProfile.PersistentCookiesPolicy.ForcePersistentCookies)
         self.profile.setHttpCacheType(QWebEngineProfile.HttpCacheType.DiskHttpCache)
         self.profile.downloadRequested.connect(self.download)
