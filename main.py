@@ -18,7 +18,7 @@ class Widgets(QMainWindow):
 
     def __init__(self):
         QMainWindow.__init__(self)
-        self.setWindowTitle("Integra Messenger")
+        self.setWindowTitle("Uhura")
         self.setWindowIcon(QtGui.QIcon('Facebook_Messenger.png'))
         self.resize(1280, 960)
         self.widget = QWidget(self)
@@ -30,8 +30,8 @@ class Widgets(QMainWindow):
         self.webview.loadFinished.connect(self.loadFinished)
 
         self.profile = QWebEngineProfile('MyProfile')
-        self.profile.setPersistentStoragePath(path('storage'))
-        self.profile.setCachePath(path('cache'))
+        self.profile.setPersistentStoragePath(path('profile/storage'))
+        self.profile.setCachePath(path('profile/cache'))
         self.profile.setPersistentCookiesPolicy(QWebEngineProfile.PersistentCookiesPolicy.ForcePersistentCookies)
         self.profile.setHttpCacheType(QWebEngineProfile.HttpCacheType.DiskHttpCache)
         self.profile.downloadRequested.connect(self.download)
@@ -39,8 +39,6 @@ class Widgets(QMainWindow):
         self.webpage.navigationRequested.connect(self.navigationRequest)
         self.webview.setPage(self.webpage)
 
-        self.webview
-        )
         #self.webview.page().profile().cookieStore().cookieAdded.connect(self.addCookie)
         #self.webview.page().profile().setPersistentCookiesPolicy(QWebEngineProfile.PersistentCookiesPolicy.ForcePersistentCookies)
         #self.webview.page().profile().setPersistentStoragePath('/storage')
@@ -103,10 +101,10 @@ class Widgets(QMainWindow):
             item.accept()
 
     def navigationRequest(self, request):
-        url = request.url().toString()
-        if not (url.startswith(self.__messengerUrl) or url.startswith('https://www.facebook.com/auth_platform')):
-            request.reject()
-        else:
+        #url = request.url().toString()
+        #if not (url.startswith(self.__messengerUrl) or url.startswith('https://www.facebook.com/auth_platform')):
+        #    request.reject()
+        #else:
             request.accept()
 
 
