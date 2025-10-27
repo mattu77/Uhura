@@ -6,7 +6,6 @@ from path import path
 from PyQt6 import QtGui, QtCore
 from PyQt6.QtGui import QAction
 from PyQt6.QtCore import QUrl
-from PyQt6.QtNetwork import QNetworkCookie
 from PyQt6.QtWidgets import QApplication, QHBoxLayout, QLineEdit, QFileDialog
 from PyQt6.QtWidgets import QMainWindow, QPushButton, QVBoxLayout
 from PyQt6.QtWidgets import QWidget, QFileDialog, QSystemTrayIcon, QMenu
