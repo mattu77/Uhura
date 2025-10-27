@@ -121,18 +121,15 @@ if __name__ == "__main__":
     tray.setIcon(icon)
     tray.setVisible(True)
 
-    # Create the menu
     menu = QMenu()
     show = QAction("Show")
     #show.triggered(window.show)
     menu.addAction(show)
 
-    # Add a Quit option to the menu.
     quit = QAction("Quit")
     quit.triggered.connect(app.quit)
     menu.addAction(quit)
 
-    # Add the menu to the tray
     tray.setContextMenu(menu)
 
     window.show()
