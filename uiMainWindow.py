@@ -6,11 +6,11 @@ from path import path
 import webbrowser
 import platformdirs
 
-from PyQt6 import QtGui, QtCore
+from PyQt6 import QtCore
 from PyQt6.QtGui import QIcon, QAction
 from PyQt6.QtCore import QUrl
-from PyQt6.QtWidgets import QApplication, QHBoxLayout, QLineEdit, QFileDialog
-from PyQt6.QtWidgets import QMainWindow, QPushButton, QVBoxLayout
+from PyQt6.QtWidgets import QApplication, QHBoxLayout
+from PyQt6.QtWidgets import QMainWindow, QVBoxLayout
 from PyQt6.QtWidgets import QWidget, QFileDialog, QSystemTrayIcon, QMenu
 from PyQt6.QtWebEngineWidgets import QWebEngineView
 from PyQt6.QtWebEngineCore import QWebEngineProfile, QWebEnginePage
@@ -18,18 +18,18 @@ from PyQt6.QtWebEngineCore import QWebEngineProfile, QWebEnginePage
 
 class MainWindow(QMainWindow):
 
-    __messengerUrl = 'https://www.facebook.com/messages'
+    __messengerUrl = 'https://www.messenger.com'
 
     def __init__(self):
         QMainWindow.__init__(self)
         self.setWindowTitle("Uhura")
-        self.setWindowIcon(QIcon('icon.png'))
+        self.setWindowIcon(QIcon(path('ui/icon.png')))
         self.resize(1280, 960)
         self.widget = QWidget(self)
 
         # Where the webpage is rendered.
         self.webview = QWebEngineView()
-        self.webview.urlChanged.connect(self.url_changed)
+        self.webview.urlChanged.connect(self.urlChanged)
         self.webview.loadStarted.connect(self.loadStarted)
         self.webview.loadFinished.connect(self.loadFinished)
 
@@ -44,7 +44,7 @@ class MainWindow(QMainWindow):
         self.webview.setPage(self.webpage)
 
         self.tray = QSystemTrayIcon(self)
-        self.tray.setIcon(QIcon('icon.png'))
+        self.tray.setIcon(QIcon(path('ui/icon.png')))
 
         # Add a context menu to the tray icon
         self.tray_menu = QMenu()
@@ -62,30 +62,8 @@ class MainWindow(QMainWindow):
         self.tray.activated.connect(self.trayClicked)
 
         #self.webview.page().profile().cookieStore().cookieAdded.connect(self.addCookie)
-        #self.webview.page().profile().setPersistentCookiesPolicy(QWebEngineProfile.PersistentCookiesPolicy.ForcePersistentCookies)
-        #self.webview.page().profile().setPersistentStoragePath('/storage')
-
-        # Navigation buttons.
-        #self.back_button = QPushButton("<")
-        #self.back_button.clicked.connect(self.webview.back)
-        #self.forward_button = QPushButton(">")
-        #self.forward_button.clicked.connect(self.webview.forward)
-        #self.refresh_button = QPushButton("Refresh")
-        #self.refresh_button.clicked.connect(self.webview.reload)
-
-        # URL address bar.
-        #self.url_text = QLineEdit()
-
-        # Button to load the current page.
-        #self.go_button = QPushButton("Go")
-        #self.go_button.clicked.connect(self.url_set)
 
         self.toplayout = QHBoxLayout()
-        #self.toplayout.addWidget(self.back_button)
-        #self.toplayout.addWidget(self.forward_button)
-        #self.toplayout.addWidget(self.refresh_button)
-        #self.toplayout.addWidget(self.url_text)
-        #self.toplayout.addWidget(self.go_button)
 
         self.layout = QVBoxLayout()
         self.layout.addLayout(self.toplayout)
@@ -96,7 +74,7 @@ class MainWindow(QMainWindow):
 
         self.webview.load(QUrl(self.__messengerUrl))
 
-    def url_changed(self, url):
+    def urlChanged(self, url):
         pass
         """Refresh the address bar"""
         if not (url.toString().startswith(self.__messengerUrl) or url.toString().startswith('https://www.facebook.com/auth_platform')):
@@ -104,7 +82,7 @@ class MainWindow(QMainWindow):
             webbrowser.open(url.toString(), new=0, autoraise=True)
         #self.url_text.setText(url.toString())
 
-    def url_set(self):
+    def urlSet(self):
         """Load the new URL"""
         #self.webview.setUrl(QUrl(self.url_text.text()))
 
@@ -135,4 +113,7 @@ class MainWindow(QMainWindow):
         event.ignore()
 
     def trayClicked(self, reason):
-        self.show()
+        if self.isVisible():
+            self.hide()
+        else:
+            self.show()
