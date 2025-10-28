@@ -1,10 +1,7 @@
 import os
-
 from platformdirs import user_config_dir
-
 from path import path
 import webbrowser
-import platformdirs
 
 from PyQt6 import QtCore
 from PyQt6.QtGui import QIcon, QAction
@@ -50,9 +47,14 @@ class MainWindow(QMainWindow):
         self.tray_menu = QMenu()
 
         # Create quit action
-        quit_action = QAction("Quit", self)
-        quit_action.triggered.connect(QApplication.quit)
-        self.tray_menu.addAction(quit_action)
+        reloadAction = QAction("Reload", self)
+        reloadAction.triggered.connect(self.reload)
+        self.tray_menu.addAction(reloadAction)
+
+        # Create quit action
+        quitAction = QAction("Quit", self)
+        quitAction.triggered.connect(QApplication.quit)
+        self.tray_menu.addAction(quitAction)
 
         # Add menu to tray
         self.tray.setContextMenu(self.tray_menu)
@@ -107,6 +109,9 @@ class MainWindow(QMainWindow):
         #    request.reject()
         #else:
             request.accept()
+
+    def reload(self):
+        self.webview.reload()
 
     def closeEvent(self, event):
         self.hide()

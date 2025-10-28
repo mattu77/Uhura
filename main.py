@@ -7,7 +7,13 @@ if __name__ == "__main__":
     #app.setQuitOnLastWindowClosed(False)
 
     mainWindow = MainWindow()
-    mainWindow.show()
+
+    minimized = False
+    if len(sys.argv) > 1:
+        if sys.argv[1] == 'minimized':
+            minimized = True
+
+    if not minimized: mainWindow.show()
 
     try:
         sys.exit(app.exec_())
