@@ -5,6 +5,7 @@ from uiMainWindow import MainWindow
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     #app.setQuitOnLastWindowClosed(False)
+    app.setStyle('fusion')
 
     mainWindow = MainWindow()
 

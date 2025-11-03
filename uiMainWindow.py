@@ -22,7 +22,11 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("Uhura")
         self.setWindowIcon(QIcon(path('ui/icon.png')))
         self.resize(1280, 960)
+        self.setStyleSheet('QMainWindow {background: "black";}')
+        self.setContentsMargins(0, 0, 0, 0)
+        #self.setStyleSheet('QLabel#label {border: 0px; border-radius: 0px; padding: 0px;}')
         self.widget = QWidget(self)
+        self.widget.setContentsMargins(0, 0, 0, 0)
 
         # Where the webpage is rendered.
         self.webview = QWebEngineView()
@@ -42,22 +46,23 @@ class MainWindow(QMainWindow):
 
         self.tray = QSystemTrayIcon(self)
         self.tray.setIcon(QIcon(path('ui/icon.png')))
+        self.tray.setToolTip('Uhura')
 
         # Add a context menu to the tray icon
-        self.tray_menu = QMenu()
+        self.trayMenu = QMenu()
 
         # Create quit action
         reloadAction = QAction("Reload", self)
         reloadAction.triggered.connect(self.reload)
-        self.tray_menu.addAction(reloadAction)
+        self.trayMenu.addAction(reloadAction)
 
         # Create quit action
         quitAction = QAction("Quit", self)
         quitAction.triggered.connect(QApplication.quit)
-        self.tray_menu.addAction(quitAction)
+        self.trayMenu.addAction(quitAction)
 
         # Add menu to tray
-        self.tray.setContextMenu(self.tray_menu)
+        self.tray.setContextMenu(self.trayMenu)
         self.tray.setVisible(True)
 
         # Connect the tray icon activation event
@@ -68,6 +73,7 @@ class MainWindow(QMainWindow):
         self.toplayout = QHBoxLayout()
 
         self.layout = QVBoxLayout()
+        self.layout.setContentsMargins(0, 0, 0, 0)
         self.layout.addLayout(self.toplayout)
         self.layout.addWidget(self.webview)
 
@@ -77,8 +83,6 @@ class MainWindow(QMainWindow):
         self.webview.load(QUrl(self.__messengerUrl))
 
     def urlChanged(self, url):
-        pass
-        """Refresh the address bar"""
         if not (url.toString().startswith(self.__messengerUrl) or url.toString().startswith('https://www.facebook.com/auth_platform')):
             self.webview.load(QUrl(self.__messengerUrl))
             webbrowser.open(url.toString(), new=0, autoraise=True)
@@ -118,7 +122,9 @@ class MainWindow(QMainWindow):
         event.ignore()
 
     def trayClicked(self, reason):
-        if self.isVisible():
-            self.hide()
-        else:
-            self.show()
+        if reason == QSystemTrayIcon.ActivationReason.Trigger:
+            if self.isVisible():
+                self.hide()
+            else:
+                self.show()
+                self.widget.activateWindow()
