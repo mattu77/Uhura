@@ -91,7 +91,7 @@ class MainWindow(QMainWindow):
         self.webview.page().setFeaturePermission(origin, feature, QWebEnginePage.PermissionPolicy.PermissionGrantedByUser)
 
     def presentNotification(self, notification):
-        print(notification)
+        self.tray.showMessage(notification.title(), notification.message())
 
     def urlChanged(self, url):
         if not (url.toString().startswith(self.__messengerUrl) or url.toString().startswith('https://www.facebook.com/auth_platform')):
