@@ -40,9 +40,11 @@ class MainWindow(QMainWindow):
         self.profile.setPersistentCookiesPolicy(QWebEngineProfile.PersistentCookiesPolicy.ForcePersistentCookies)
         self.profile.setHttpCacheType(QWebEngineProfile.HttpCacheType.DiskHttpCache)
         self.profile.downloadRequested.connect(self.download)
+        self.profile.setNotificationPresenter(self.presentNotification)
         self.webpage = QWebEnginePage(self.profile, self.webview)
         self.webpage.navigationRequested.connect(self.navigationRequest)
         self.webview.setPage(self.webpage)
+        self.webview.page().featurePermissionRequested.connect(self.setFeaturePermission)
 
         self.tray = QSystemTrayIcon(self)
         self.tray.setIcon(QIcon(path('ui/icon.png')))
@@ -81,6 +83,15 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.widget)
 
         self.webview.load(QUrl(self.__messengerUrl))
+
+    def setFeaturePermission(self, origin: QUrl, feature: QWebEnginePage.Feature):
+        if feature != QWebEnginePage.Feature.Notifications:
+            return
+
+        self.webview.page().setFeaturePermission(origin, feature, QWebEnginePage.PermissionPolicy.PermissionGrantedByUser)
+
+    def presentNotification(self, notification):
+        print(notification)
 
     def urlChanged(self, url):
         if not (url.toString().startswith(self.__messengerUrl) or url.toString().startswith('https://www.facebook.com/auth_platform')):
