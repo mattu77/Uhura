@@ -37,6 +37,7 @@ class MainWindow(QMainWindow):
         self.profile = QWebEngineProfile('MyProfile')
         self.profile.setPersistentStoragePath(user_config_dir() + '/'+ self.__name +'/storage')
         self.profile.setCachePath(path(user_config_dir() + '/'+ self.__name +'/cache'))
+        self.profile.setHttpUserAgent('Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36')
         self.profile.setPersistentCookiesPolicy(QWebEngineProfile.PersistentCookiesPolicy.ForcePersistentCookies)
         self.profile.setHttpCacheType(QWebEngineProfile.HttpCacheType.DiskHttpCache)
         self.profile.downloadRequested.connect(self.download)
