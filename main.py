@@ -7,7 +7,7 @@ if __name__ == "__main__":
     #app.setQuitOnLastWindowClosed(False)
     app.setStyle('fusion')
 
-    mainWindow = MainWindow()
+    mainWindow = MainWindow("Uhura", "https://www.messenger.com")
 
     minimized = False
     if len(sys.argv) > 1:
