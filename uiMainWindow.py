@@ -10,7 +10,7 @@ from PyQt6.QtWidgets import QApplication, QHBoxLayout
 from PyQt6.QtWidgets import QMainWindow, QVBoxLayout
 from PyQt6.QtWidgets import QWidget, QFileDialog, QSystemTrayIcon, QMenu
 from PyQt6.QtWebEngineWidgets import QWebEngineView
-from PyQt6.QtWebEngineCore import QWebEngineProfile, QWebEnginePage
+from PyQt6.QtWebEngineCore import QWebEngineProfile, QWebEnginePage, QWebEnginePermission, QWebEngineNewWindowRequest
 
 
 class MainWindow(QMainWindow):
@@ -46,6 +46,8 @@ class MainWindow(QMainWindow):
         self.webpage.navigationRequested.connect(self.navigationRequest)
         self.webview.setPage(self.webpage)
         self.webview.page().featurePermissionRequested.connect(self.setFeaturePermission)
+        self.webview.page().permissionRequested.connect(self.setPermission)
+        self.webview.page().newWindowRequested.connect(self.newWindow)
 
         self.tray = QSystemTrayIcon(self)
         self.tray.setIcon(QIcon(path('ui/icon.png')))
@@ -86,10 +88,19 @@ class MainWindow(QMainWindow):
         self.webview.load(QUrl(self.__mainUrl))
 
     def setFeaturePermission(self, origin: QUrl, feature: QWebEnginePage.Feature):
+        print(feature)
         if feature != QWebEnginePage.Feature.Notifications:
             return
 
         self.webview.page().setFeaturePermission(origin, feature, QWebEnginePage.PermissionPolicy.PermissionGrantedByUser)
+
+    def setPermission(self, permission: QWebEnginePermission):
+        print(permission.origin())
+        print(permission.permissionType())
+
+    def newWindow(self, request: QWebEngineNewWindowRequest):
+        print(request.requestedUrl())
+        webbrowser.open(request.requestedUrl().toString(), new=0, autoraise=True)
 
     def presentNotification(self, notification):
         self.tray.showMessage(notification.title(), notification.message())
@@ -124,7 +135,7 @@ class MainWindow(QMainWindow):
             item.accept()
 
     def navigationRequest(self, request):
-        #print(request.url())
+        print(request.url())
         #url = request.url().toString()
         #if not (url.startswith(self.__mainUrl) or url.startswith('https://www.facebook.com/auth_platform')):
         #    request.reject()
